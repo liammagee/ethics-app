@@ -1,0 +1,118 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="javascripts/jquery-ui-1.12.1/jquery-ui.min.css">
+        <script src="javascripts/jquery-3.3.1.min.js"></script>
+        <script src="javascripts/jquery-ui-1.12.1/jquery-ui.min.js"></script>
+        <script type="text/javascript">            
+            var score = 0;
+            var questionIdCounter = 0;
+            var responseIdCounter = 0;
+            var responseScoreMap = {};
+            var responseQuestionMap = {};
+            var selections = {};
+            var currentId = 0;
+
+            var initQuiz = function() {
+                score = 0;
+                selections = {};
+                $('#results').remove();
+                for (var i = 1; i <= questionIdCounter; i++) {
+                    $('#q' + (i + 1)).hide();
+                }
+                $('#s1').css({'background-color': 'yellow'});
+                $('#q1').show();
+                currentId = 1;
+            };
+            $(document).ready(() => {
+                $.getJSON("/ethics.json", function(data)  {
+                    var forms = [], steps = [];
+                    $.each( data, ( key, val ) => {
+                        questionIdCounter++;
+                        qText = "";
+                        qText += "<li id='q" + questionIdCounter + "'>" + val.question;
+                        qText += "<ul>";
+                        $.each( val.responses, ( keyResp, valResp ) => {
+                            responseIdCounter++;
+                            qText += "<li class='clickable' id='" + responseIdCounter + "'>" + valResp.response + "</li>";
+                            //qText += "<li class='clickable' id='" + responseIdCounter + "'>" + valResp.response + ": " + valResp.score + "</li>";
+                            responseScoreMap[responseIdCounter] = valResp.score;
+                            responseQuestionMap[responseIdCounter] = questionIdCounter;
+                        });
+                        qText += "</ul>";
+                        qText += "</li>";
+                        forms.push( qText );
+                        steps.push( "<li class='step' id='s" + questionIdCounter + "'>Step " + questionIdCounter + "</li>" );
+                    });
+                    
+                    $( "<ul/>", {
+                        "class": "progress-list",
+                        html: steps.join( "" )
+                    }).appendTo( "#progress" );
+
+                    $( "<ul/>", {
+                        "class": "steps-list",
+                        html: forms.join( "" )
+                    }).appendTo( "#output" );
+
+                    initQuiz();
+                } );
+
+                $('#progress').on('click', 'li.step', (clickable) => {
+                    if (currentId > 0) {
+                        $('#s' + (currentId)).css({'background-color': 'white'});
+                        $('#q' + (currentId)).hide();
+                    }
+                    
+                    var qId = clickable.target.id.substring(1);
+                    $('#s' + (qId)).css({'background-color': 'yellow'});
+                    $('#q' + (qId)).show();
+                    currentId = qId;
+                    var selectedId = selections[currentId];
+                    if (typeof(selectedId) !== "undefined") {
+                        $('#' + selectedId).css({'background-color': 'yellow'});
+                    }
+                });
+
+                $('#output').on('click', '#startOver', () => { 
+                    initQuiz();
+                });
+
+                $('#output').on('click', 'li.clickable', (clickable) => {
+                    var qScore = responseScoreMap[clickable.target.id];
+                    var qId = responseQuestionMap[clickable.target.id];
+                    score += qScore;
+                    selections[qId] = clickable.target.id;
+                    $(clickable.target).effect("highlight", {color: 'yellow'}, 500, function() {
+                        $('#s' + (qId)).css({'background-color': 'white'});
+                        $('#q' + (qId)).hide();
+                        if (qId < questionIdCounter) {
+                            currentId = qId + 1;
+                            $('#q' + (currentId)).show();
+                            $('#s' + (currentId)).css({'background-color': 'yellow'});
+                            var selectedId = selections[currentId];
+                            if (typeof(selectedId) !== "undefined") {
+                                $('#' + selectedId).css({'background-color': 'yellow'});
+                            }
+                        }
+                        else {
+                            currentId = 0;
+                            $( "<div/>", {
+                                id: 'results',
+                                html: "<div>Your risk assessment score is: " + score + "!</div>" +
+                                    "<a id='startOver' style='background-color:yellow'>Start over</a>"
+                            }).appendTo( '#output' );
+                        }
+                    });
+                });
+            });
+
+    	</script>
+
+    </head>
+    <body>
+        <h1>Ethics application</h1>
+        
+        <div id="progress"></div>
+        <div id="output"></div>
+    </body>
+</html>

@@ -1,0 +1,112 @@
+[
+	{
+		"id":1, 
+		"question": "How many people are involved in the research?",
+		"responses": [
+			{
+				"response": "1",
+				"score": 1
+			},
+			{
+				"response": "2",
+				"score": 2
+			},
+			{
+				"response": "3",
+				"score": 3
+			},
+			{
+				"response": "4+",
+				"score": 4
+			}
+		]
+	},
+	{
+		"id":2, 
+		"question": "How likely are all the researchers to be at the same institution in 5 years time?",
+		"responses": [
+			{
+				"response": "Very likely",
+				"score": 1
+			},
+			{
+				"response": "Not sure",
+				"score": 2
+			},
+			{
+				"response": "Very unlikely",
+				"score": 3
+			}
+		]
+	},
+	{
+		"id":3, 
+		"question": "Will you be asking the participant's name at any stage?",
+		"responses": [
+			{
+				"response": "No",
+				"score": 1
+			},
+			{
+				"response": "Yes",
+				"score": 2
+			}
+		]
+	},
+	{
+		"id":4, 
+		"question": "Can the participant be identified from other data?",
+		"responses": [
+			{
+				"response": "No",
+				"score": 1
+			},
+			{
+				"response": "Yes",
+				"score": 2
+			}
+		]
+	},
+	{
+		"id":5, 
+		"question": "Will the data be stored on a shared platform?",
+		"responses": [
+			{
+				"response": "No",
+				"score": 1
+			},
+			{
+				"response": "Yes",
+				"score": 2
+			}
+		]
+	},
+	{
+		"id":6, 
+		"question": "Will the data be connected or linked to other data sets?",
+		"responses": [
+			{
+				"response": "No",
+				"score": 1
+			},
+			{
+				"response": "Yes",
+				"score": 2
+			}
+		]
+	},
+	{
+		"id":7, 
+		"question": "Will the data be connected or linked at an individual level (e.g. by a common identifier)?",
+		"responses": [
+			{
+				"response": "No",
+				"score": 1
+			},
+			{
+				"response": "Yes",
+				"score": 2
+			}
+		]
+	}
+]
